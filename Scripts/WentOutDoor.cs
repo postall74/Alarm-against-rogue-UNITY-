@@ -8,6 +8,7 @@ public class WentOutDoor : MonoBehaviour
     [SerializeField] private UnityEvent _reached;
     private AudioSource _audioSource;
     private float _speedVolumeDown = 5f;
+    private float _minVolume = 0f;
 
     public event UnityAction Reached
     {
@@ -15,13 +16,13 @@ public class WentOutDoor : MonoBehaviour
         remove => _reached?.RemoveListener(value);
     }
 
-    public void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<Player>(out Player player) == true)
+        if (collision.TryGetComponent<Player>(out Player player))
         {
             _reached?.Invoke();
             _audioSource = GetComponent<AudioSource>();
-            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, 0f, Time.deltaTime / _speedVolumeDown);
+            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _minVolume, Time.deltaTime / _speedVolumeDown);
         }
     }
 }

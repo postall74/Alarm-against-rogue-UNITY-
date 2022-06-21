@@ -6,7 +6,7 @@ public class DeleteObstacle : MonoBehaviour
 {
     [SerializeField] private BoxCollider2D _collider;
 
-    public void Change()
+    public void DestroyObstain()
     {
         Destroy(_collider);
     }
