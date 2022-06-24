@@ -5,11 +5,18 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    private const float SpeedUp = 5f;
+    private const float SpeedDown = -5f;
+    private const float SpeedZero = 0f;
+    private const float ZeroGravityScale = 0f;
+    private const float OneGravityScale = 1f;
+
     [SerializeField] private float _speed;
     [SerializeField] private int _jumpForce;
+
     private Animator _animator;
     private Rigidbody2D _rigidbody2D;
-    private bool _isJumped = false;
+    private bool _isJumped;
     private bool _isFasingRight = true;
 
     public void Start()
@@ -28,9 +35,38 @@ public class Movement : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<Ladder>())
+        {
+            _animator.SetBool("Climb", true);
+            _rigidbody2D.gravityScale = ZeroGravityScale;
+
+            if (Input.GetKey(KeyCode.W))
+            {
+                _rigidbody2D.velocity = new Vector2(SpeedZero, SpeedUp);
+                
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                _rigidbody2D.velocity = new Vector2(SpeedZero, SpeedDown);
+            }
+            else
+            {
+                _animator.SetBool("Climb", false);
+                _rigidbody2D.velocity = new Vector2(SpeedZero, SpeedZero);
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        _rigidbody2D.gravityScale = OneGravityScale;
+    }
+
     private void FixedUpdate()
     {
-        _isJumped = Physics2D.OverlapCircle(gameObject.transform.position, 0.2f, 3);
+        _isJumped = Physics2D.OverlapCircle(gameObject.transform.position, 0.2f);
         _animator.SetFloat("JumpSpeed", _rigidbody2D.velocity.y);
 
         if (!_isJumped)
