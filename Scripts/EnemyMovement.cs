@@ -13,15 +13,17 @@ public class EnemyMovement : MonoBehaviour
 
     private bool _isFasingLeft = true;
     private int _targetPatrolPosition;
+    private Enemy _enemy;
 
     private void Start()
     {
         _enemyRigidbody2D = GetComponent<Rigidbody2D>();
+        _enemy = GetComponent<Enemy>();
     }
 
     private void FixedUpdate()
     {
-        if (gameObject.GetComponent<Enemy>() != null)
+        if (_enemy != null)
         {
             if (_positionsPatrol.Length != 0)
             {

@@ -24,11 +24,7 @@ public class Enemy : MonoBehaviour
         {
             foreach (ContactPoint2D point in collision.contacts)
             {
-                if (point.normal.y < 0.9f)
-                {
-                    player.Hurt();
-                }
-                else
+                if (point.collider.transform.position.y > point.otherCollider.transform.position.y)
                 {
                     Die();
                 }
@@ -46,16 +42,5 @@ public class Enemy : MonoBehaviour
     {
         _isDead = true;
         Destroy(gameObject, 1f);
-    }
-
-    private bool IsAnimationPlaying(string animationName)
-    {
-        var animatorStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-
-        if (animatorStateInfo.IsName(animationName))
-        {
-            return true;
-        }
-        return false;
     }
 }

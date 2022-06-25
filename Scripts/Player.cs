@@ -27,16 +27,13 @@ public class Player : MonoBehaviour
         {
             foreach (ContactPoint2D point in collision.contacts)
             {
-                if (point.normal.y >= 0.6f)
-                {
-                    enemy.Die();
-                }
-                else
+                if (point.collider.transform.position.y > point.otherCollider.transform.position.y)
                 {
                     Hurt();
                 }
             }
         }
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -47,15 +44,11 @@ public class Player : MonoBehaviour
             _coinsCountText.text = _coins.ToString();
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-    }
 
     public void Hurt()
     {
         _animator.SetBool(IsDead, true);
         Debug.Log($"You are die");
-        transform.position = new Vector3(transform.position.x + 1f, transform.position.y + 1f, transform.position.z);
     }
 }
 
