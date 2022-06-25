@@ -32,7 +32,7 @@ public class EnemyGenerator : MonoBehaviour
     {
         WaitForSecondsRealtime wait = new WaitForSecondsRealtime(Latency);
 
-        while (true)
+        while (!gameObject.GetComponentInChildren<Enemy>())
         {
             Enemy newEnemy = Instantiate(_enemy, transform.position, Quaternion.identity);
             _created.Invoke();

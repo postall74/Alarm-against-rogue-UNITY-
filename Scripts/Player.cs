@@ -1,47 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
+
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Player : MonoBehaviour 
+[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(Animator))]
+public class Player : MonoBehaviour
 {
-    private const float SpeedUp = 5f;
-    private const float SpeedDown = -5f;
-    private const float SpeedZero = 0f;
-    private const float ZeroGravityScale = 0f;
-    private const float OneGravityScale = 1f;
+    private const string IsDead = "IsDead";
 
-    private Rigidbody2D _rigidbody2D;
+    [SerializeField] private TMP_Text _coinsCountText;
+
+    private Animator _animator;
+    private int _coins = 0;
 
     private void Start()
     {
-        _rigidbody2D = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        _rigidbody2D.gravityScale = ZeroGravityScale;
-
-        if (collision.GetComponent<Ladder>())
+        if (collision.collider.TryGetComponent<Enemy>(out Enemy enemy))
         {
-            if (Input.GetKey(KeyCode.W))
+            foreach (ContactPoint2D point in collision.contacts)
             {
-                _rigidbody2D.velocity = new Vector2(SpeedZero, SpeedUp);
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                _rigidbody2D.velocity = new Vector2(SpeedZero, SpeedDown);
-            }
-            else
-            {
-                _rigidbody2D.velocity = new Vector2(SpeedZero, SpeedZero);
+                if (point.normal.y >= 0.6f)
+                {
+                    enemy.Die();
+                }
+                else
+                {
+                    Hurt();
+                }
             }
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        _rigidbody2D.gravityScale = OneGravityScale;
+        if (collision.collider.GetComponent<Coin>())
+        {
+            _coins++;
+            _coinsCountText.text = _coins.ToString();
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+    }
+
+    public void Hurt()
+    {
+        _animator.SetBool(IsDead, true);
+        Debug.Log($"You are die");
+        transform.position = new Vector3(transform.position.x + 1f, transform.position.y + 1f, transform.position.z);
     }
 }
+

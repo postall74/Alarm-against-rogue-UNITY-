@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyMovement : MonoBehaviour
 {
-    private const float MinDistance = 0.2f;
+    private const float MinDistance = 1f;
 
     [SerializeField] private float _speed;
     [SerializeField] private Rigidbody2D _enemyRigidbody2D;
@@ -21,7 +21,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (gameObject.GetComponent<Enemy>())
+        if (gameObject.GetComponent<Enemy>() != null)
         {
             if (_positionsPatrol.Length != 0)
             {
@@ -33,14 +33,14 @@ public class EnemyMovement : MonoBehaviour
                     {
                         _targetPatrolPosition = 0;
 
-                        if (_isFasingLeft)
+                        if (!_isFasingLeft)
                             Flip();
                     }
                     else
                     {
                         _targetPatrolPosition = 1;
 
-                        if (!_isFasingLeft)
+                        if (_isFasingLeft)
                             Flip();
                     }
                 }
