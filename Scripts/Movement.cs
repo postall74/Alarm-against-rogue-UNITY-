@@ -53,20 +53,12 @@ public class Movement : MonoBehaviour
         {
             _animator.SetBool(Climb, true);
             _rigidbody2D.gravityScale = ZeroGravityScale;
-            move = _playerInput.Direction;
+            move = _playerInput.DirectionVertical;
 
-            if (move > 0)
-            {
+            if (move != 0)
                 _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _speed * move);
-            }
-            else if (move < 0)
-            {
-                _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _speed * move);
-            }
-            else if (move == 0)
-            {
+            else 
                 _animator.SetBool(Climb, false);
-            }
         }
     }
 
@@ -86,7 +78,7 @@ public class Movement : MonoBehaviour
             return;
         }
 
-        move = _playerInput.Direction;
+        move = _playerInput.DirectionHorizontal;
         _animator.SetFloat(Speed, Mathf.Abs(move));
         _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
 
