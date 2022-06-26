@@ -26,31 +26,31 @@ public class EnemyMovement : MonoBehaviour
     {
         if (_enemy != null)
         {
-            if (_positionsPatrol.Length != 0)
+            if (_positionsPatrol.Length == 0)
+            {
+                transform.Translate(_speed * Time.deltaTime * -1, 0, 0);
+            }
+            else
             {
                 _enemyRigidbody2D.position = Vector2.MoveTowards(transform.position, _positionsPatrol[_targetPatrolPosition].position, _speed * Time.deltaTime);
 
                 if (Vector2.Distance(transform.position, _positionsPatrol[_targetPatrolPosition].position) < MinDistance)
                 {
-                    if (_targetPatrolPosition > 0)
+                    if (_targetPatrolPosition != _positionsPatrol.Length - 1)
                     {
-                        _targetPatrolPosition = 0;
+                        _targetPatrolPosition++;
 
                         if (!_isFasingLeft)
                             Flip();
                     }
                     else
                     {
-                        _targetPatrolPosition = 1;
+                        _targetPatrolPosition = 0;
 
                         if (_isFasingLeft)
                             Flip();
                     }
                 }
-            }
-            else
-            {
-                transform.Translate(_speed * Time.deltaTime * -1, 0, 0);
             }
         }
     }
