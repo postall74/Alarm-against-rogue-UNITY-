@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.GetComponent<Coin>())
+        if (collision.collider.TryGetComponent<Coin>(out Coin coin))
         {
             _coins++;
             _coinsCountText.text = _coins.ToString();

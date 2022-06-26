@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Collider2D))]
 public class Coin : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class Coin : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.GetComponent<Player>())
+        if (collision.collider.TryGetComponent<Player>(out Player player))
         {
             StartCherryTake();
         }

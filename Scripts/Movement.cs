@@ -3,12 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(PlayerInput))]
 public class Movement : MonoBehaviour
 {
     private const float SpeedZero = 0f;
     private const float ZeroGravityScale = 0f;
     private const float OneGravityScale = 1f;
     private const float GroungRadius = 0.2f;
+    private const float Up = 1f;
+    private const float Down = -1f;
+    private const float Right = 1f;
+    private const float Left = -1f;
     private const string Speed = "Speed";
     private const string Crouch = "Crouch";
     private const string Rise = "Rise";
@@ -18,13 +25,12 @@ public class Movement : MonoBehaviour
     private const string Horizontal = "Horizontal";
     private const string Vertical = "Vertical";
 
-
-
     [SerializeField] private float _speed;
     [SerializeField] private int _jumpForce;
 
     private Animator _animator;
     private Rigidbody2D _rigidbody2D;
+    private PlayerInput _playerInput;
 
     private float move;
     private bool _isJumped;
@@ -35,20 +41,16 @@ public class Movement : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _playerInput = GetComponent<PlayerInput>();
     }
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && _isJumped)
+        if (_playerInput.Jump && _isJumped)
         {
             _animator.SetTrigger(Jump);
             Vector2 force = new Vector2(0, _jumpForce);
             _rigidbody2D.AddForce(force);
-        }
-
-        if (Input.GetKeyDown(KeyCode.S) && _isRise)
-        {
-            _animator.SetTrigger(Crouch);
         }
     }
 
@@ -59,21 +61,22 @@ public class Movement : MonoBehaviour
             _animator.SetBool(Climb, true);
             _rigidbody2D.gravityScale = ZeroGravityScale;
 
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            if (_playerInput.Direction == Up)
             {
-                move = 1f;
+                move = _playerInput.Direction;
                 _rigidbody2D.velocity = new Vector2(SpeedZero, _speed * move);
 
             }
-            else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            else if (_playerInput.Direction == Down)
             {
-                move = -1f;
+                move = _playerInput.Direction;
                 _rigidbody2D.velocity = new Vector2(SpeedZero, _speed * move);
             }
             else
             {
+                move = _playerInput.Direction;
                 _animator.SetBool(Climb, false);
-                _rigidbody2D.velocity = new Vector2(SpeedZero, SpeedZero);
+                _rigidbody2D.velocity = new Vector2(SpeedZero, _speed * move);
             }
         }
     }
@@ -94,7 +97,7 @@ public class Movement : MonoBehaviour
             return;
         }
 
-        move = Input.GetAxis(Horizontal);
+        move = _playerInput.Direction;
         _animator.SetFloat(Speed, Mathf.Abs(move));
         _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
 
