@@ -8,22 +8,15 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInput))]
 public class Movement : MonoBehaviour
 {
-    private const float SpeedZero = 0f;
     private const float ZeroGravityScale = 0f;
     private const float OneGravityScale = 1f;
     private const float GroungRadius = 0.2f;
-    private const float Up = 1f;
-    private const float Down = -1f;
-    private const float Right = 1f;
-    private const float Left = -1f;
     private const string Speed = "Speed";
     private const string Crouch = "Crouch";
     private const string Rise = "Rise";
     private const string JumpSpeed = "JumpSpeed";
     private const string Jump = "Jump";
     private const string Climb = "Climb";
-    private const string Horizontal = "Horizontal";
-    private const string Vertical = "Vertical";
 
     [SerializeField] private float _speed;
     [SerializeField] private int _jumpForce;
@@ -60,23 +53,19 @@ public class Movement : MonoBehaviour
         {
             _animator.SetBool(Climb, true);
             _rigidbody2D.gravityScale = ZeroGravityScale;
+            move = _playerInput.Direction;
 
-            if (_playerInput.Direction == Up)
+            if (move > 0)
             {
-                move = _playerInput.Direction;
-                _rigidbody2D.velocity = new Vector2(SpeedZero, _speed * move);
-
+                _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _speed * move);
             }
-            else if (_playerInput.Direction == Down)
+            else if (move < 0)
             {
-                move = _playerInput.Direction;
-                _rigidbody2D.velocity = new Vector2(SpeedZero, _speed * move);
+                _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _speed * move);
             }
-            else
+            else if (move == 0)
             {
-                move = _playerInput.Direction;
                 _animator.SetBool(Climb, false);
-                _rigidbody2D.velocity = new Vector2(SpeedZero, _speed * move);
             }
         }
     }

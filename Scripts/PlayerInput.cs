@@ -5,9 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Player))]
 public class PlayerInput : MonoBehaviour
 {
-    private const string Horizontal = "Horizontal";
-    private const string Vertical = "Vertical";
-
     private Player _player;
 
     public float Direction { get; private set; }
